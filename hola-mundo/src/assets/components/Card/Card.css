@@ -40,3 +40,16 @@
   font-weight: bold;
   cursor: pointer;
 }
+.tw-card-button:hover {
+  color: #fff;
+  background-color: #82aee7;
+}
+
+.tw-card-button.unfollow {
+  color: #4d5051;
+  background-color: #fff;
+}
+.tw-card-button.unfollow:hover {
+  color: #fff;
+  background-color: #d99494;
+}
