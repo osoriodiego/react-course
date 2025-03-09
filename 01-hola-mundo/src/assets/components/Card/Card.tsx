@@ -39,7 +39,7 @@ export const Card = ({ name, user, isFollowing }: CardProps) => {
             follow ? "tw-card-button unfollow" : "tw-card-button follow"
           }
         >
-          {follow ? "unfollow" : "follow"}
+          {follow ? "following" : "follow"}
         </button>
       </aside>
     </article>

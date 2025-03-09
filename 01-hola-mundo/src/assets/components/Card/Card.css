@@ -46,10 +46,13 @@
 }
 
 .tw-card-button.unfollow {
-  color: #4d5051;
-  background-color: #fff;
+  color: #fff;
+  background-color: transparent;
+  width: 100px;
+  border: 2px solid grey;
 }
 .tw-card-button.unfollow:hover {
   color: #fff;
   background-color: #d99494;
+  border: 2px solid #d99494;
 }
