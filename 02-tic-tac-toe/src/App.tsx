@@ -39,19 +39,31 @@ const Square = ({ index, value, isSelected, updateBoard }: SquareProps) => {
 
 interface PlayerProps {
   turn: string;
+  isFinished: boolean;
   winner: string | null;
+  resetBoard: () => void;
 }
 
-const Player = ({ turn, winner }: PlayerProps) => {
+const Player = ({ turn, winner, isFinished, resetBoard }: PlayerProps) => {
   return (
-    <div className={` ${winner ? "turn-winner" : "turn"}`}>{turn}</div>
+    <>
+      <div className={` ${winner ? "turn-winner" : "turn"}`}>
+        {winner ? `Winner: ${turn}` : isFinished ? `Draw` : `Turn: ${turn}`}
+      </div>
+      {isFinished && (
+        <div className="turn reset" onClick={resetBoard}>
+          RESET GAME
+        </div>
+      )}
+    </>
   );
 };
 
 export function App() {
   const [board, setBoard] = useState(Array(9).fill(null));
   const [turn, setTurn] = useState(Turns.O);
-  const [winner, setWinner] = useState(null);
+  const [winner, setWinner] = useState<string | null>(null);
+  const [isFinished, setIsFinished] = useState(false);
 
   const checkWinner = (board: string[]) => {
     for (const combo of winnerCombos) {
@@ -63,8 +75,17 @@ export function App() {
     return null;
   };
 
+  const checkFinished = (board: string[]) => {
+    return board.every((square) => square !== null);
+  };
+
   const updateBoard = (index: number): void => {
+    if (board[index] !== null) {
+      return;
+    }
+
     if (board[index] !== null || winner) {
+      setIsFinished(true);
       return;
     }
 
@@ -72,14 +93,30 @@ export function App() {
     newBoard[index] = turn;
     setBoard(newBoard);
 
+    const newFinished = checkFinished(newBoard);
+    if (newFinished) {
+      setIsFinished(newFinished);
+      return;
+    }
+
     const newWinner = checkWinner(newBoard);
     if (newWinner) {
       setWinner(newWinner);
+      setIsFinished(true);
       return;
     }
 
     const newTurn: string = turn === Turns.X ? Turns.O : Turns.X;
     setTurn(newTurn);
+  };
+
+  const resetBoard = () => {
+    console.log("reset board");
+    const newBoard = Array(9).fill(null);
+    setBoard(newBoard);
+    setTurn(Turns.O);
+    setWinner(null);
+    setIsFinished(false);
   };
 
   return (
@@ -97,8 +134,14 @@ export function App() {
         ))}
       </section>
       <section>
-        <Player turn={turn === "X" ? "X" : "O"} winner={winner} />
+        <Player
+          turn={turn === "X" ? "X" : "O"}
+          winner={winner}
+          isFinished={isFinished}
+          resetBoard={resetBoard}
+        />
       </section>
+      <section></section>
     </main>
   );
 }
